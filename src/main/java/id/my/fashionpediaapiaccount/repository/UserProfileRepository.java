@@ -1,12 +1,12 @@
 package id.my.fashionpediaapiaccount.repository;
 
-import id.my.fashionpediaapiaccount.model.User;
+import id.my.fashionpediaapiaccount.model.UserProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByEmail(String email);
+public interface UserProfileRepository extends JpaRepository<UserProfile, Integer> {
+    Optional<UserProfile> findByEmail(String email);
 }

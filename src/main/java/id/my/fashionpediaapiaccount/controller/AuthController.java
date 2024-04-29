@@ -1,18 +1,19 @@
 package id.my.fashionpediaapiaccount.controller;
 
+import id.my.fashionpediaapiaccount.dto.AuthenticationRequest;
+import id.my.fashionpediaapiaccount.dto.AuthenticationResponse;
+import id.my.fashionpediaapiaccount.dto.RegisterRequest;
 import id.my.fashionpediaapiaccount.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.RestController;
 import java.util.logging.Logger;
 
-@Controller
-@RequestMapping(path = "/auth")
+@RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     private static final Logger logger = Logger.getLogger(AuthController.class.getName());
@@ -20,36 +21,21 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @GetMapping(path = "/login")
-    public String loginPage(Model model) {
-        logger.info("controller berhasil diakses");
-        return "login";
-    }
-
-    @GetMapping(path = "/register")
-    public String registerPage(Model model) {
-        return "register";
-    }
-
     @PostMapping(path = "/login")
-    public String login(Model model,
-                        @RequestParam(value = "username") String username,
-                        @RequestParam(value = "password") String password) {
-        if (authService.login(username, password)) {
-            model.addAttribute("successful", true);
-            return "login";
-        }
-        model.addAttribute("successful", false);
-        return "login";
+    public ResponseEntity<AuthenticationResponse> login (
+            @RequestBody AuthenticationRequest request
+    ) {
+        logger.info("masuk ke login controller dengan email: " + request.getEmail());
+        return ResponseEntity.ok(authService.authenticate(request));
     }
 
     @PostMapping(path = "/register")
-    public String register(Model model,
-                        @RequestParam(value = "username") String username,
-                        @RequestParam(value = "password") String password) {
-        authService.register(username, password);
-
-        return "redirect:/auth/login";
+    public ResponseEntity<AuthenticationResponse> register (
+            @RequestBody RegisterRequest request
+    ) {
+        logger.info("masuk ke register controller dengan email: " + request.getEmail());
+        return ResponseEntity.ok(authService.register(request));
     }
+
 
 }

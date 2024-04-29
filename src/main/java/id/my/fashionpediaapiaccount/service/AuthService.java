@@ -1,6 +1,10 @@
 package id.my.fashionpediaapiaccount.service;
 
+import id.my.fashionpediaapiaccount.dto.AuthenticationRequest;
+import id.my.fashionpediaapiaccount.dto.AuthenticationResponse;
+import id.my.fashionpediaapiaccount.dto.RegisterRequest;
+
 public interface AuthService {
-    boolean login(String username, String password);
-    void register(String username, String password);
+    AuthenticationResponse authenticate(AuthenticationRequest request);
+    AuthenticationResponse register(RegisterRequest request);
 }

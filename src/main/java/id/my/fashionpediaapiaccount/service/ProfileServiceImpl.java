@@ -1,28 +1,55 @@
 package id.my.fashionpediaapiaccount.service;
 
-import id.my.fashionpediaapiaccount.model.User;
 import id.my.fashionpediaapiaccount.model.UserProfile;
-import id.my.fashionpediaapiaccount.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import id.my.fashionpediaapiaccount.dto.UserProfileResponse;
+import id.my.fashionpediaapiaccount.dto.UserProfileRequest;
+import id.my.fashionpediaapiaccount.exceptions.NoUserProfileExistException;
+import id.my.fashionpediaapiaccount.service.ProfileService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import id.my.fashionpediaapiaccount.repository.UserProfileRepository;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserProfileRepository userProfileRepository;
 
     @Override
-    public UserProfile get(String username){
-        User user = userRepository.getUser(username);
-        UserProfile userProfile = user.getProfile();
-        return userProfile;
+    public UserProfileResponse getUserProfile(UserProfileRequest request) {
+        Optional<UserProfile> userProfileOptional = userProfileRepository.findByEmail(request.getEmail());
+        UserProfile userProfile = userProfileOptional.orElse(null);
+        if (userProfile == null) {
+            throw new NoUserProfileExistException();
+        }
+
+        return UserProfileResponse.builder()
+                .id(userProfile.getId())
+                .userName(userProfile.getUserName())
+                .email(userProfile.getEmail())
+                .address(userProfile.getAddress())
+                .phoneNumber(userProfile.getPhoneNumber())
+                .about(userProfile.getAbout())
+                .build();
     }
 
     @Override
-    public boolean set(String phoneNumber, String address, String about) {
-        return false;
+    public void setUserProfile(UserProfileResponse userProfileDto) {
+        Optional<UserProfile> userProfileOptional = userProfileRepository.findByEmail(userProfileDto.getEmail());
+        UserProfile userProfile = userProfileOptional.orElse(null);
+        if (userProfile == null) {
+            throw new NoUserProfileExistException();
+        }
+
+        userProfile.setUserName(userProfileDto.getUserName());
+        userProfile.setEmail(userProfileDto.getEmail());
+        userProfile.setAddress(userProfileDto.getAddress());
+        userProfile.setPhoneNumber(userProfileDto.getPhoneNumber());
+        userProfile.setAbout(userProfileDto.getAbout());
+
+        userProfileRepository.save(userProfile);
     }
-
-
 }

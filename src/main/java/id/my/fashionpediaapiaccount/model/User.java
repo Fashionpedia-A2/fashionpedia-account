@@ -1,25 +1,78 @@
 package id.my.fashionpediaapiaccount.model;
 
-import id.my.fashionpediaapiaccount.model.UserProfile;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-public class User {
-    private final String username;
-    private final String password;
+import java.util.Collection;
+import java.util.List;
 
-    private final UserProfile profile;
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-        this.profile = new UserProfile(username);
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "_user")
+public class User implements UserDetails {
+
+    @Id
+    @GeneratedValue
+    private Integer id;
+
+    private String password;
+
+    @Column(unique=true)
+    private String email;
+
+    private String role;
+
+    private boolean active;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "userprofile_id", referencedColumnName = "id")
+    private UserProfile userProfile;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(role.equals("ADMIN")) {
+            return ApplicationUserRole.ADMIN.getGrantedAuthority();
+        } else {
+            return ApplicationUserRole.USER.getGrantedAuthority();
+        }
     }
 
+    @Override
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
+    @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
-    public UserProfile getProfile() { return profile; }
+    @Override
+    public boolean isAccountNonExpired() {
+        return this.active;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return this.active;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return this.active;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.active;
+    }
 }
