@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.logging.Logger;
 
 @RestController
-@RequestMapping("/profile")
+@RequestMapping("/auth")
 public class ProfileController {
 
     private static final Logger logger = Logger.getLogger(ProfileController.class.getName());
@@ -18,12 +18,13 @@ public class ProfileController {
     @Autowired
     private ProfileService profileService;
 
-    @PostMapping("/")
+    @PostMapping("/profile")
     public ResponseEntity<UserProfileResponse> getUserProfile(@RequestBody UserProfileRequest request) {
+        logger.info("masuk ke get profile controller dengan email: " + request.getEmail());
         return ResponseEntity.ok(profileService.getUserProfile(request));
     }
 
-    @PutMapping("/")
+    @PutMapping("/profile")
     public ResponseEntity<Void> setUserProfile(@RequestBody UserProfileResponse userProfileDto) {
         profileService.setUserProfile(userProfileDto);
         return ResponseEntity.ok().build();

@@ -1,5 +1,6 @@
 package id.my.fashionpediaapiaccount.service;
 
+import id.my.fashionpediaapiaccount.controller.ProfileController;
 import id.my.fashionpediaapiaccount.model.UserProfile;
 import id.my.fashionpediaapiaccount.dto.UserProfileResponse;
 import id.my.fashionpediaapiaccount.dto.UserProfileRequest;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import id.my.fashionpediaapiaccount.repository.UserProfileRepository;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 @RequiredArgsConstructor
@@ -18,8 +20,12 @@ public class ProfileServiceImpl implements ProfileService {
 
     private final UserProfileRepository userProfileRepository;
 
+    private static final Logger logger = Logger.getLogger(ProfileServiceImpl.class.getName());
+
     @Override
     public UserProfileResponse getUserProfile(UserProfileRequest request) {
+        logger.info("masuk ke get profile service dengan email: " + request.getEmail());
+
         Optional<UserProfile> userProfileOptional = userProfileRepository.findByEmail(request.getEmail());
         UserProfile userProfile = userProfileOptional.orElse(null);
         if (userProfile == null) {
