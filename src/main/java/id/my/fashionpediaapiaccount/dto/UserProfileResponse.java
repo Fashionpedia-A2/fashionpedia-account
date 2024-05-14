@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 public class UserProfileResponse {
     private Integer id;
 
+    private String cartId;
+
     private String email;
     private String userName;
     private String address;

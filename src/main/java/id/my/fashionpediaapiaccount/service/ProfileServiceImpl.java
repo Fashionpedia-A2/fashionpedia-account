@@ -34,6 +34,7 @@ public class ProfileServiceImpl implements ProfileService {
 
         return UserProfileResponse.builder()
                 .id(userProfile.getId())
+                .cartId(userProfile.getCartId())
                 .userName(userProfile.getUserName())
                 .email(userProfile.getEmail())
                 .address(userProfile.getAddress())

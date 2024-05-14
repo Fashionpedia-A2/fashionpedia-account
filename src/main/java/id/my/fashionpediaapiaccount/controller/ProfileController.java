@@ -26,6 +26,7 @@ public class ProfileController {
 
     @PutMapping("/profile")
     public ResponseEntity<Void> setUserProfile(@RequestBody UserProfileResponse userProfileDto) {
+        logger.info("masuk ke set profile controller dengan email: " + userProfileDto.getEmail());
         profileService.setUserProfile(userProfileDto);
         return ResponseEntity.ok().build();
     }
