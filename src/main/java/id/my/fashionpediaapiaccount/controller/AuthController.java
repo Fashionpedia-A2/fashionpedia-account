@@ -22,7 +22,6 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @CrossOrigin
     @PostMapping(path = "/login")
     public ResponseEntity<AuthenticationResponse> login (
             @RequestBody AuthenticationRequest request
@@ -31,7 +30,6 @@ public class AuthController {
         return ResponseEntity.ok(authService.authenticate(request));
     }
 
-    @CrossOrigin
     @PostMapping(path = "/register")
     public ResponseEntity<AuthenticationResponse> register (
             @RequestBody RegisterRequest request
