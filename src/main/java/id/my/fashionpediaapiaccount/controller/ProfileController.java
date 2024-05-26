@@ -20,14 +20,12 @@ public class ProfileController {
     @Autowired
     private ProfileService profileService;
 
-    @CrossOrigin
     @PostMapping("/profile")
     public ResponseEntity<UserProfileResponse> getUserProfile(@RequestBody UserProfileRequest request) {
         logger.info("masuk ke get profile controller dengan email: " + request.getEmail());
         return ResponseEntity.ok(profileService.getUserProfile(request));
     }
 
-    @CrossOrigin
     @PutMapping("/profile")
     public ResponseEntity<Void> setUserProfile(@RequestBody UserProfileResponse userProfileDto) {
         logger.info("masuk ke set profile controller dengan email: " + userProfileDto.getEmail());
